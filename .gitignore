@@ -1,0 +1,57 @@
+# Environment files
+.env
+.env.backup
+.env.production
+
+# IDE and editor files
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+.phpactor.json
+
+# Dependencies
+/node_modules
+/vendor
+/auth.json
+
+# Build and cache files
+/public/build
+/public/hot
+/public/storage
+/bootstrap/cache/*
+/.phpunit.cache
+.phpunit.result.cache
+
+# Storage directories
+/storage/*.key
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/app/*
+/storage/pail
+
+# Database
+/database/*.sqlite
+/database/*.sqlite-journal
+
+# System files
+*.log
+.DS_Store
+Thumbs.db
+
+# Development
+Homestead.json
+Homestead.yaml
+
+# Keep directory structure
+!/storage/app/.gitkeep
+!/storage/framework/cache/.gitkeep
+!/storage/framework/sessions/.gitkeep
+!/storage/framework/testing/.gitkeep
+!/storage/framework/views/.gitkeep
+!/storage/logs/.gitkeep
+!/bootstrap/cache/.gitkeep
