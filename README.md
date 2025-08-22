@@ -43,7 +43,7 @@ A full-stack application built with Laravel 12 + Octane backend and Vue 3 + Type
 1. **Clone the repository**
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/thdomingues-dev/fintech-assets-explorer
     cd fintech-assets-explorer
     ```
 
@@ -120,15 +120,6 @@ A full-stack application built with Laravel 12 + Octane backend and Vue 3 + Type
 -   `/favorites` - Favorites page
 -   `/assets/{id}` - Asset details page
 
-### Key Files
-
--   `app/Http/Controllers/Api/AssetController.php` - Asset API endpoints
--   `app/Http/Controllers/Api/FavoriteController.php` - Favorites API endpoints
--   `app/Models/Favorite.php` - Favorite model
--   `resources/js/Pages/Home.vue` - Home page component
--   `resources/js/Pages/Favorites.vue` - Favorites page component
--   `resources/js/Pages/AssetDetails.vue` - Asset details component
-
 ## Features Implemented
 
 ### Core Requirements
@@ -142,38 +133,13 @@ A full-stack application built with Laravel 12 + Octane backend and Vue 3 + Type
 -   [x] 60-second API caching
 -   [x] Responsive design
 
-### UX Enhancements
-
--   [x] Loading states for all API calls
--   [x] Error handling and user feedback
--   [x] Responsive layout with Tailwind CSS
--   [x] Interactive favorite buttons
--   [x] Navigation between pages
--   [x] Price formatting and market cap abbreviations
--   [x] Color-coded price changes (green/red)
-
 ### Optional Extras Implemented
 
 1. **React Component**
 
-    - [x] Isolated React sparkline chart widget embedded in Vue pages
-    - [x] Historical data integration with CoinGecko API
-    - [x] React component for price visualization
-    - [x] Color-coded based on price movement (green for gains, red for losses)
-    - [x] Loading states and graceful fallback handling
-
 2. **Docker Setup**
 
-    - [x] Complete docker-compose.yml configuration
-    - [x] Multi-stage Dockerfile with PHP 8.2 + Apache
-    - [x] SQLite database persistence
-    - [x] Production-ready containerization
-    - [x] One-command deployment with `docker-compose up`
-
 3. **Automated Tests**
-    - [x] Backend: 24 Pest tests (API endpoints, caching, CRUD operations)
-    - [x] Frontend: 24 Vitest tests (components, interactions, state management)
-    - [x] 100% test coverage of core functionality
 
 ## Development Commands
 
@@ -202,21 +168,6 @@ npm run build          # Build assets for production
 ## Docker Deployment
 
 For containerized deployment, use Docker:
-
-```bash
-# Build and start containers
-docker-compose up -d
-
-# View logs
-docker logs fintech-assets-explorer
-
-# Stop containers
-docker-compose down
-
-# Rebuild containers
-docker-compose build --no-cache
-docker-compose up -d
-```
 
 Access the application at `http://localhost:8000`
 
@@ -258,14 +209,6 @@ fintech-assets-explorer/
 ├── docker-compose.yml           # Container orchestration
 └── Dockerfile                   # Container definition
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
 
 ## License
 
