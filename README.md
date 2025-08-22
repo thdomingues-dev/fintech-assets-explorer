@@ -2,6 +2,9 @@
 
 A full-stack application built with Laravel 12 + Octane backend and Vue 3 + TypeScript + Inertia.js frontend for exploring cryptocurrency assets using the CoinGecko API.
 
+<img width="1189" height="774" alt="image" src="https://github.com/user-attachments/assets/f2a37030-34de-4bec-a818-89eb8194be43" />
+
+
 ## Features
 
 -   **Asset Listing**: View top 10 cryptocurrency assets with real-time pricing data
