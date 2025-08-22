@@ -103,7 +103,7 @@ A full-stack application built with Laravel 12 + Octane backend and Vue 3 + Type
 
 -   `GET /api/assets` - List top 10 cryptocurrency assets
 -   `GET /api/assets/{id}` - Get detailed information about a specific asset
--   `GET /api/assets/{id}/market_chart?days=1` - Get historical price data for sparkline charts (optional)
+-   `GET /api/assets/{id}/market_chart` - Get historical price data for sparkline charts
 
 ### Favorites
 
@@ -167,7 +167,8 @@ A full-stack application built with Laravel 12 + Octane backend and Vue 3 + Type
     - [x] Complete docker-compose.yml configuration
     - [x] Multi-stage Dockerfile with PHP 8.2 + Apache
     - [x] SQLite database persistence
-    - [x] Optional nginx reverse proxy for production
+    - [x] Production-ready containerization
+    - [x] One-command deployment with `docker-compose up`
 
 3. **Automated Tests**
     - [x] Backend: 24 Pest tests (API endpoints, caching, CRUD operations)
@@ -189,10 +190,37 @@ php artisan migrate:fresh # Fresh migration
 php artisan cache:clear  # Clear application cache
 php artisan config:clear # Clear config cache
 
-# Code quality
-composer test           # Run tests (if implemented)
-npm run build          # Production build
+# Testing
+composer test           # Run PHP tests (Pest)
+npm test               # Run frontend tests (Vitest)
+npm run test:run       # Run tests in CI mode
+
+# Production build
+npm run build          # Build assets for production
 ```
+
+## Docker Deployment
+
+For containerized deployment, use Docker:
+
+```bash
+# Build and start containers
+docker-compose up -d
+
+# View logs
+docker logs fintech-assets-explorer
+
+# Stop containers
+docker-compose down
+
+# Rebuild containers
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+Access the application at `http://localhost:8000`
+
+For detailed Docker instructions, see [DOCKER.md](DOCKER.md)
 
 ## Cache Configuration
 
@@ -200,6 +228,36 @@ The application uses Laravel's cache system to store CoinGecko API responses for
 
 -   `crypto_assets` - Top 10 assets list
 -   `crypto_asset_{id}` - Individual asset details
+-   `crypto_market_chart_{id}` - Market chart data for sparklines
+
+## Project Structure
+
+```
+fintech-assets-explorer/
+├── app/
+│   ├── Http/Controllers/Api/     # API controllers
+│   └── Models/                   # Eloquent models
+├── database/
+│   ├── migrations/               # Database migrations
+│   └── database.sqlite           # SQLite database
+├── resources/
+│   ├── js/
+│   │   ├── Pages/               # Vue page components
+│   │   ├── components/          # React chart components
+│   │   ├── stores/              # Pinia state management
+│   │   └── utils/               # API utilities
+│   └── css/                     # Stylesheets
+├── routes/
+│   ├── api.php                  # API routes
+│   └── web.php                  # Web routes
+├── tests/
+│   ├── Feature/                 # PHP feature tests
+│   ├── Unit/                    # PHP unit tests
+│   └── vitest/                  # Frontend tests
+├── docker/                      # Docker configuration
+├── docker-compose.yml           # Container orchestration
+└── Dockerfile                   # Container definition
+```
 
 ## Contributing
 
