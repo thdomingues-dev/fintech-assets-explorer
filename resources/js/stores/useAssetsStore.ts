@@ -48,11 +48,13 @@ export const useAssetsStore = defineStore("assets", () => {
         try {
             loading.value = true;
             error.value = "";
+            currentAsset.value = null;
 
             const response = await fetch(`/api/assets/${assetId}`);
             if (!response.ok) {
                 if (response.status === 404) {
                     error.value = "Asset not found.";
+                    currentAsset.value = null;
                     return;
                 }
                 throw new Error("Failed to fetch asset details");
@@ -61,6 +63,7 @@ export const useAssetsStore = defineStore("assets", () => {
             currentAsset.value = await response.json();
         } catch (err) {
             error.value = "Failed to load asset details. Please try again.";
+            currentAsset.value = null;
         } finally {
             loading.value = false;
         }

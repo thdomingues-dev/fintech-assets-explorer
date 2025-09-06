@@ -94,20 +94,6 @@
                             </button>
                         </div>
 
-                        <div class="my-4">
-                            <ReactSparklineWrapper
-                                :data="sparklineData[asset.id] || []"
-                                :current-price="asset.current_price"
-                                :price-change24h="asset.price_change_24h"
-                                :color="
-                                    asset.price_change_percentage_24h >= 0
-                                        ? '#10b981'
-                                        : '#ef4444'
-                                "
-                                :height="50"
-                            />
-                        </div>
-
                         <div class="space-y-3">
                             <div class="flex justify-between">
                                 <span class="text-sm text-gray-600"
@@ -175,16 +161,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { router, Link } from "@inertiajs/vue3";
-import ReactSparklineWrapper from "../components/ReactSparklineWrapper.vue";
 import { useAssetsStore } from "../stores/useAssetsStore";
 import { useFavoritesStore } from "../stores/useFavoritesStore";
 
 const assetsStore = useAssetsStore();
 const favoritesStore = useFavoritesStore();
-
-const sparklineData = ref<Record<string, any[]>>({});
 
 const goToAssetDetails = (assetId: string) => {
     router.visit(`/assets/${assetId}`);
@@ -209,110 +192,10 @@ const formatMarketCap = (marketCap: number) => {
     }
 };
 
-const getSparklineData = async (asset: any) => {
-    try {
-        const response = await fetch(
-            `/api/assets/${asset.id}/market_chart?days=1`
-        );
-        if (response.ok) {
-            const data = await response.json();
-            if (
-                data.prices &&
-                Array.isArray(data.prices) &&
-                data.prices.length > 0
-            ) {
-                return data.prices.map(
-                    ([timestamp, price]: [number, number]) => ({
-                        timestamp,
-                        price: Math.round(price * 100) / 100,
-                    })
-                );
-            }
-        }
-    } catch (error) {
-        console.warn("Failed to fetch 24h data, using fallback");
-    }
-
-    if (
-        asset.sparkline_in_7d?.price &&
-        Array.isArray(asset.sparkline_in_7d.price) &&
-        asset.sparkline_in_7d.price.length > 0
-    ) {
-        const now = Date.now();
-        const prices = asset.sparkline_in_7d.price;
-
-        return prices.map((price: number, index: number) => ({
-            timestamp: now - (prices.length - 1 - index) * 60 * 60 * 1000,
-            price: Math.round(price * 100) / 100,
-        }));
-    }
-
-    return generateEnhancedSparklineData(
-        asset.current_price,
-        asset.price_change_24h
-    );
-};
-
-const generateEnhancedSparklineData = (
-    currentPrice: number,
-    priceChange24h: number
-) => {
-    const data = [];
-    const now = Date.now();
-    const points = 24;
-
-    const price = currentPrice || 50000;
-    const change24h = priceChange24h || 0;
-    const price24hAgo = price - change24h;
-
-    let previousPrice = price24hAgo;
-
-    for (let i = points - 1; i >= 0; i--) {
-        const progress = (points - 1 - i) / (points - 1);
-        const baseInterpolated = price24hAgo + change24h * progress;
-
-        const volatility = (Math.random() - 0.5) * 0.06;
-        const momentum = ((previousPrice - price24hAgo) / price24hAgo) * 0.3;
-        const noise = Math.sin(i * 0.4) * 0.015;
-
-        const adjustedPrice =
-            baseInterpolated * (1 + volatility + momentum + noise);
-        const finalPrice = Math.max(adjustedPrice, price24hAgo * 0.8);
-
-        data.push({
-            timestamp: now - i * 60 * 60 * 1000,
-            price: Math.round(finalPrice * 100) / 100,
-        });
-
-        previousPrice = finalPrice;
-    }
-
-    if (data.length > 0) {
-        data[data.length - 1].price = price;
-    }
-
-    return data;
-};
-
-const loadSparklineData = async () => {
-    if (assetsStore.assets.length === 0) return;
-
-    for (const asset of assetsStore.assets) {
-        try {
-            const data = await getSparklineData(asset);
-            sparklineData.value[asset.id] = data;
-        } catch (error) {
-            sparklineData.value[asset.id] = [];
-        }
-    }
-};
-
 onMounted(async () => {
     await Promise.all([
         assetsStore.fetchAssets(),
         favoritesStore.fetchFavorites(),
     ]);
-
-    await loadSparklineData();
 });
 </script>

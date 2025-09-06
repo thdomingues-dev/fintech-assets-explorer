@@ -329,6 +329,7 @@ const formatMarketCap = (marketCap: number) => {
 };
 
 onMounted(async () => {
+    assetsStore.clearCurrentAsset();
     await Promise.all([
         assetsStore.fetchAssetDetails(props.assetId),
         favoritesStore.fetchFavorites(),

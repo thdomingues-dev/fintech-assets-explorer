@@ -57,8 +57,28 @@ export const useFavoritesStore = defineStore("favorites", () => {
             const favoritesData = await response.json();
             favorites.value = favoritesData;
 
-            for (const favorite of favoritesData) {
-                await fetchAssetDetails(favorite.asset_id);
+            const ids = favoritesData
+                .map((f: Favorite) => f.asset_id)
+                .join(",");
+            if (ids.length > 0) {
+                try {
+                    const batchResp = await fetch(
+                        `/api/assets?ids=${encodeURIComponent(ids)}`
+                    );
+                    if (batchResp.ok) {
+                        const batch = await batchResp.json();
+                        if (Array.isArray(batch)) {
+                            for (const item of batch) {
+                                if (item && item.id) {
+                                    assetsDetails.value[item.id] =
+                                        item as Asset;
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error batch-loading favorites details", e);
+                }
             }
         } catch (err) {
             error.value = "Failed to load favorites. Please try again.";
